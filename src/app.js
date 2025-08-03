@@ -6,8 +6,8 @@ const app = express();
 
 // Middlewares básicos
 app.use(cors());
-app.use(express.json()); // Middleware incorporado para JSON
-app.use(express.urlencoded({ extended: true })); // Para datos de formularios
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Conexión a la base de datos
 db.connect(err => {
@@ -17,6 +17,12 @@ db.connect(err => {
   }
   console.log('Conectado a la base de datos MySQL como ID:', db.threadId);
 });
+
+// Importar rutas
+const authRoutes = require('./routes/authRoutes');
+
+// Usar rutas
+app.use('/api/auth', authRoutes);
 
 // Ruta de prueba básica
 app.get('/', (req, res) => {
