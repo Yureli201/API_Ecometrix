@@ -5,7 +5,7 @@ const jwtUtils = require('../config/jwt');
 const authController = {
   // Registrar nuevo usuario
   register: async (req, res) => {
-    const { nombre_empresa, gmail, contraseña, estado, sector, num_empleados, facturacion_anual } = req.body;
+    const { nombre_empresa, gmail, contraseña, estado, sector, num_empleados, actividad_principal} = req.body;
     
     try {
       // Verificar si el email ya existe
@@ -27,17 +27,11 @@ const authController = {
       
       // Insertar nuevo usuario
       const [userResult] = await db.promise().query(
-        'INSERT INTO usuarios (nombre_empresa, gmail, contraseña, estado, sector) VALUES (?, ?, ?, ?, ?)',
-        [nombre_empresa, gmail, hashedPassword, estado, sector]
+        'INSERT INTO usuarios (nombre_empresa, gmail, contraseña, estado, sector, actividad_principal, num_empleados) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [nombre_empresa, gmail, hashedPassword, estado, sector, actividad_principal, num_empleados]
       );
       
       const userId = userResult.insertId;
-      
-      // Insertar detalles de la empresa
-      await db.promise().query(
-        'INSERT INTO empresa_detalles (id_usuario, num_empleados, facturacion_anual) VALUES (?, ?, ?)',
-        [userId, num_empleados, facturacion_anual]
-      );
       
       // Generar token JWT
       const token = jwtUtils.generateToken(userId);
@@ -95,13 +89,7 @@ const authController = {
         success: true,
         message: 'Inicio de sesión exitoso',
         token,
-        user: {
-          id: user.id_usuario,
-          nombre_empresa: user.nombre_empresa,
-          gmail: user.gmail,
-          estado: user.estado,
-          sector: user.sector
-        }
+        user: user.id_usuario
       });
       
     } catch (error) {
