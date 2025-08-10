@@ -21,10 +21,12 @@ db.connect(err => {
 // Importar rutas
 const authRoutes = require('./routes/authRoutes');
 const ActividadRoutes = require('./routes/ActividadRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 // Usar rutas
 app.use('/api/auth', authRoutes);
 app.use('/api/data', ActividadRoutes);
+app.use('/api/user', userRoutes);
 
 // Ruta de prueba básica
 app.get('/', (req, res) => {
