@@ -1,21 +1,17 @@
 const db = require('../config/db');
 
 const ActividadController = {
-  // -------------------------------
-  // Registro y manejo de datos_actividad
-  // -------------------------------
-  
+
   addDataActividad: async (req, res) => {
     const { user_id } = req.params;
-    const { id_tipo_fuente, mes_periodo, cantidad, costo_mxn, evidencia_url } = req.body;
-    const mesFormateado = mes_periodo.length === 7 ? mes_periodo + '-01' : mes_periodo;
+    const { id_tipo_fuente, mes_periodo,año_periodo, cantidad, costo_mxn, evidencia_url } = req.body;
 
     try {
       const [result] = await db.promise().query(
         `INSERT INTO datos_actividad 
-          (id_usuario, id_tipo_fuente, mes_periodo, cantidad, costo_mxn, evidencia_url) 
-          VALUES (?, ?, ?, ?, ?, ?)`,
-        [user_id, id_tipo_fuente, mesFormateado, cantidad, costo_mxn, evidencia_url || null]
+          (id_usuario, id_tipo_fuente, mes_periodo, año_periodo, cantidad, costo_mxn, evidencia_url) 
+          VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [user_id, id_tipo_fuente, mes_periodo, año_periodo, cantidad, costo_mxn, evidencia_url || null]
       );
 
       res.status(201).json({
@@ -34,18 +30,23 @@ const ActividadController = {
   },
 
   getDataActividadByMonth: async (req, res) => {
-    const { user_id, month } = req.params;
-    const mesFormateado = month.length === 7 ? month + '-01' : month;
+    const { user_id, month, age } = req.params;
 
     try {
       const [rows] = await db.promise().query(
-        'SELECT * FROM datos_actividad WHERE id_usuario = ? AND mes_periodo = ?',
-        [user_id, mesFormateado]
+        'SELECT * FROM datos_actividad WHERE id_usuario = ? AND mes_periodo = ? AND año_periodo = ?',
+        [user_id, month, age]
+      );
+      const [resume] = await db.promise().query(
+        `SELECT SUM(cantidad) AS total_cantidad, SUM(costo_mxn) AS total_costo, id_tipo_fuente FROM datos_actividad 
+         WHERE id_usuario = ? AND mes_periodo = ? AND año_periodo = ? GROUP BY id_tipo_fuente`,
+        [user_id, month, age]
       );
 
       res.json({
         success: true,
-        data: rows
+        data: rows,
+        resume: resume
       });
     } catch (error) {
       console.error('Error obteniendo datos:', error);
@@ -85,11 +86,7 @@ const ActividadController = {
         error: error.message
       });
     }
-  },
-
-  // -------------------------------
-  // Sigueinte
-  // -------------------------------
+  }
 };
 
 module.exports = ActividadController;
