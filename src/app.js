@@ -23,12 +23,14 @@ const authRoutes = require('./routes/authRoutes');
 const ActividadRoutes = require('./routes/ActividadRoutes');
 const userRoutes = require('./routes/userRoutes');
 const huellaRoutes = require('./routes/huellaRoutes');
+const predictionRoutes = require('./routes/predictionRoutes');
 
 // Usar rutas
 app.use('/api/auth', authRoutes);
 app.use('/api/data', ActividadRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/huella', huellaRoutes);
+app.use('/api/prediction', predictionRoutes);
 
 // Ruta de prueba básica
 app.get('/', (req, res) => {
