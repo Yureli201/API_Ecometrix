@@ -8,9 +8,9 @@ router.use(authMiddleware.protect);
 */
 
 // Generar nueva predicción
-router.post('/:user_id', predictionController.generatePrediction);
+router.get('/:user_id', predictionController.generatePrediction);
 
 // Obtener todas las predicciones de un usuario
-router.get('/:user_id', predictionController.getPredictions);
+router.get('/obtener/:user_id', predictionController.getPredictions);
 
 module.exports = router;
