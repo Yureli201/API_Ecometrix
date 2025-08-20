@@ -3,8 +3,9 @@ const router = express.Router();
 const predictionController = require('../controllers/predictionController');
 const authMiddleware = require('../middlewares/authMiddleware');
 
-// Proteger todas las rutas con autenticación JWT
+/* Proteger todas las rutas con autenticación JWT
 router.use(authMiddleware.protect);
+*/
 
 // Generar nueva predicción
 router.post('/:user_id', predictionController.generatePrediction);

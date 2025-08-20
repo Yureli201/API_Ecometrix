@@ -7,13 +7,13 @@ const predictionController = {
     try {
       const { user_id } = req.params;
       
-      // Verificar que el usuario autenticado coincide con el user_id
+      /* Verificar que el usuario autenticado coincide con el user_id
       if (req.user.id !== parseInt(user_id)) {
         return res.status(403).json({
           success: false,
           message: 'No autorizado para realizar esta acción'
         });
-      }
+      }*/
 
       const prediction = await predictionService.generatePrediction(user_id);
       
