@@ -34,12 +34,11 @@ const ActividadController = {
 
     try {
       const [rows] = await db.promise().query(
-        'SELECT * FROM datos_actividad WHERE id_usuario = ? AND mes_periodo = ? AND año_periodo = ?',
+        'SELECT tf.nombre_fuente, da.mes_periodo, da.año_periodo, da.cantidad, da.costo_mxn, da.evidencia_url FROM datos_actividad da JOIN tipo_fuente tf ON da.id_tipo_fuente = tf.id_tipo_fuente WHERE da.id_usuario = ? AND da.mes_periodo = ? AND da.año_periodo = ? ',
         [user_id, month, age]
       );
       const [resume] = await db.promise().query(
-        `SELECT SUM(cantidad) AS total_cantidad, SUM(costo_mxn) AS total_costo, id_tipo_fuente FROM datos_actividad 
-         WHERE id_usuario = ? AND mes_periodo = ? AND año_periodo = ? GROUP BY id_tipo_fuente`,
+        `SELECT tf.nombre_fuente, SUM(da.cantidad) AS total_cantidad, SUM(da.costo_mxn) AS total_costo FROM datos_actividad da JOIN tipo_fuente tf ON da.id_tipo_fuente = tf.id_tipo_fuente WHERE da.id_usuario = ? AND da.mes_periodo = ? AND da.año_periodo = ? GROUP BY tf.nombre_fuente`,
         [user_id, month, age]
       );
 
