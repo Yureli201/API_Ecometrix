@@ -34,7 +34,7 @@ const ActividadController = {
 
     try {
       const [rows] = await db.promise().query(
-        'SELECT tf.nombre_fuente, da.mes_periodo, da.año_periodo, da.cantidad, da.costo_mxn, da.evidencia_url FROM datos_actividad da JOIN tipo_fuente tf ON da.id_tipo_fuente = tf.id_tipo_fuente WHERE da.id_usuario = ? AND da.mes_periodo = ? AND da.año_periodo = ? ',
+        'SELECT da.id_actividad tf.nombre_fuente, da.mes_periodo, da.año_periodo, da.cantidad, da.costo_mxn, da.evidencia_url FROM datos_actividad da JOIN tipo_fuente tf ON da.id_tipo_fuente = tf.id_tipo_fuente WHERE da.id_usuario = ? AND da.mes_periodo = ? AND da.año_periodo = ? ',
         [user_id, month, age]
       );
       const [resume] = await db.promise().query(
